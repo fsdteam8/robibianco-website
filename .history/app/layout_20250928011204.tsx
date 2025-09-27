@@ -15,7 +15,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Robibianco ",
-  description: "Restaurant, Food ",
+  description: "Restaurant and pizzeria in Bianco, Calabria, Italy",
 };
 
 export default function RootLayout({

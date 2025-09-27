@@ -15,7 +15,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Robibianco ",
-  description: "Restaurant, Food ",
+  description: "",
 };
 
 export default function RootLayout({

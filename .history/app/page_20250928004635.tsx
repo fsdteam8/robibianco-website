@@ -41,14 +41,14 @@ export default function Home() {
     setHasSpun(false)
   }
 
-  // Allow user to try again only if they haven't spun yet
-  // const handleTryAgain = () => {
-  //   if (!hasSpun) {
-  //     setCurrentStep("spin-wheel")
-  //   } else {
-  //     handleBackToHome()
-  //   }
-  // }
+  const handleTryAgain = () => {
+    // Allow user to try again only if they haven't spun yet
+    if (!hasSpun) {
+      setCurrentStep("spin-wheel")
+    } else {
+      handleBackToHome()
+    }
+  }
 
   // Render current step
   switch (currentStep) {
