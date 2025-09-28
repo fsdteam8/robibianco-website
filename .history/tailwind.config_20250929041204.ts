@@ -1,0 +1,32 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+      },
+    },
+  },
+  plugins: [],
+};
+export default config;
+ theme: {
+    extend: {
+      fontFamily: {
+        heading: ["var(--font-playfair)", "serif"],
+        body: ["var(--font-poppins)", "sans-serif"],
+      },
+    },
+  },
+    images: {
+    domains: [
+      "hebbkx1anhila5yf.public.blob.vercel-storage.com"
+    ],
+  },
