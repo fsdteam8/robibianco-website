@@ -87,27 +87,21 @@ body {
   0% {
     transform: rotate(0deg);
   }
-  20% {
-    transform: rotate(180deg);
-  }
-  60% {
-    transform: rotate(1440deg);
-  }
   100% {
     transform: rotate(var(--final-rotation, 1800deg));
   }
 }
 
-/* Updated responsive animation durations for better UX */
+/* Added responsive utilities for better scaling */
 @media (max-width: 640px) {
   .spin-animation {
-    animation-duration: 3.5s;
+    animation-duration: 2.5s;
   }
 }
 
 @media (min-width: 1024px) {
   .spin-animation {
-    animation-duration: 4.5s;
+    animation-duration: 3.5s;
   }
 }
 

@@ -206,7 +206,7 @@ export default function SpinWheel({
             <div className="relative">
               <div
                 ref={wheelRef}
-                className="w-80 h-80 font-body sm:w-[28rem] sm:h-[28rem] lg:w-[32rem] lg:h-[32rem] xl:w-[36rem] xl:h-[36rem] rounded-full relative overflow-hidden border-8 lg:border-12 border-gray-300 transition-transform  shadow-2xl"
+                className="w-72 h-72 font-body sm:w-[28rem] sm:h-[28rem] lg:w-[32rem] lg:h-[32rem] xl:w-[36rem] xl:h-[36rem] rounded-full relative overflow-hidden border-8 lg:border-12 border-gray-300 transition-transform  shadow-2xl"
                 // onClick={handleSpin}
               >
                 <svg

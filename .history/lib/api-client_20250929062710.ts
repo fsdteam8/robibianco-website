@@ -88,7 +88,7 @@ class ApiClient {
 
   updateBaseURL(newBaseURL: string) {
     this.instance.defaults.baseURL = newBaseURL
-    // console.log(`API Base URL updated to: ${newBaseURL}`)
+    console.log(`API Base URL updated to: ${newBaseURL}`)
   }
 }
 

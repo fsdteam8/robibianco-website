@@ -18,7 +18,7 @@ export default function ResultScreen({
   useEffect(() => {
     const timer = setTimeout(() => {
       onBackToHome();
-    }, 60000); // 30 seconds auto-redirect
+    }, 60000); // 60 seconds auto-redirect
 
     return () => clearTimeout(timer);
   }, [onBackToHome]);
@@ -33,6 +33,79 @@ export default function ResultScreen({
 interface WinnerScreenProps {
   result: SpinResult;
   onBackToHome: () => void;
+}
+
+// Confetti Component
+function Confetti() {
+  const confettiRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const confettiContainer = confettiRef.current;
+    if (!confettiContainer) return;
+
+    const colors = [
+      "#f97316",
+      "#ff6b6b",
+      "#ffd700",
+      "#ff1493",
+      "#00ffff",
+      "#ff4500",
+      "#ffffff",
+      "#ffff00",
+      "#ff69b4",
+      "#00ff00",
+    ];
+    const confettiCount = 100;
+
+    // Create confetti pieces
+    for (let i = 0; i < confettiCount; i++) {
+      const confettiPiece = document.createElement("div");
+      confettiPiece.className = "confetti-piece";
+      confettiPiece.style.cssText = `
+        position: absolute;
+        width: ${Math.random() * 10 + 5}px;
+        height: ${Math.random() * 10 + 5}px;
+        background-color: ${colors[Math.floor(Math.random() * colors.length)]};
+        left: ${Math.random() * 100}vw;
+        animation-duration: ${Math.random() * 3 + 2}s;
+        animation-delay: ${Math.random() * 2}s;
+        animation-name: confetti-fall;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        border-radius: ${Math.random() > 0.5 ? "50%" : "0"};
+        transform: rotate(${Math.random() * 360}deg);
+      `;
+      confettiContainer.appendChild(confettiPiece);
+    }
+
+    // Cleanup function
+    return () => {
+      if (confettiContainer) {
+        confettiContainer.innerHTML = "";
+      }
+    };
+  }, []);
+
+  return (
+    <>
+      <div
+        ref={confettiRef}
+        className="fixed inset-0 pointer-events-none z-50"
+      />
+      <style jsx>{`
+        @keyframes confetti-fall {
+          0% {
+            transform: translateY(-100vh) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
+          }
+        }
+      `}</style>
+    </>
+  );
 }
 
 function WinnerScreen({ result, onBackToHome }: WinnerScreenProps) {
@@ -56,8 +129,8 @@ function WinnerScreen({ result, onBackToHome }: WinnerScreenProps) {
               : ""
           }
           ${
-            result.prize.prizeCode
-              ? `Prize Code: ${result.prize.prizeCode}`
+            result.prize.couponCode
+              ? `Prize Code: ${result.prize.couponCode}`
               : `Prize Code: PRIZE-${Date.now()}`
           }
 
@@ -68,7 +141,7 @@ function WinnerScreen({ result, onBackToHome }: WinnerScreenProps) {
           To redeem:
           1. Show this QR code at checkout
           2. Or use the codes above online
-          3. Visit: https://yourstore.com/redeem
+          3. Visit: https://robibianco-website.vercel.app/
 
           Thank you for spinning with us!
         `.trim();
@@ -114,6 +187,9 @@ function WinnerScreen({ result, onBackToHome }: WinnerScreenProps) {
 
   return (
     <div className="min-h-screen bg-[#48a256] relative overflow-hidden">
+      {/* Confetti Effect */}
+      <Confetti />
+
       <div className="absolute bottom-0 right-0 w-full h-48 sm:h-64 lg:h-80">
         <svg
           viewBox="0 0 1200 300"
@@ -148,11 +224,11 @@ function WinnerScreen({ result, onBackToHome }: WinnerScreenProps) {
           </div>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 lg:mb-6 text-balance">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 lg:mb-6 text-balance font-heading">
           Congratulations!
         </h1>
 
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 sm:mb-12 lg:mb-16 text-[#f97316] text-balance px-4 [-webkit-text-stroke:1px_black]">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 sm:mb-12 lg:mb-16 text-[#f97316] text-balance px-4 font-body [-webkit-text-stroke:1px_black]">
           You Win: {result.prize.rewardName}
         </h2>
 
@@ -162,9 +238,9 @@ function WinnerScreen({ result, onBackToHome }: WinnerScreenProps) {
             <canvas ref={canvasRef} className="max-w-full max-h-full" />
           </div>
 
-          <div className="space-y-2 sm:space-y-3">
+          <div className="space-y-2 sm:space-y-3 font-body">
             <p className="font-bold text-sm sm:text-lg lg:text-xl">
-              Prize Code: {result.prize.prizeCode || `PRIZE-${Date.now()}`}
+              Prize Code: {result.prize.couponCode || `PRIZE-${Date.now()}`}
             </p>
             <p className="text-xs sm:text-sm lg:text-base leading-relaxed">
               {result.prize.description}
@@ -188,7 +264,7 @@ function WinnerScreen({ result, onBackToHome }: WinnerScreenProps) {
           </button>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 max-w-xs sm:max-w-md lg:max-w-lg mx-auto">
+        <div className="flex flex-col sm:flex-row gap-4 max-w-xs sm:max-w-md lg:max-w-lg mx-auto font-body">
           <button
             onClick={onBackToHome}
             className="flex-1 bg-[#f97316] hover:bg-[#ea580c] text-white font-bold py-3 sm:py-4 lg:py-5 px-6 sm:px-8 lg:px-10 rounded-xl text-base sm:text-lg lg:text-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
@@ -197,7 +273,7 @@ function WinnerScreen({ result, onBackToHome }: WinnerScreenProps) {
           </button>
         </div>
 
-        <p className="text-sm sm:text-base text-black mt-6 sm:mt-8">
+        <p className="text-sm sm:text-base text-black mt-6 sm:mt-8 font-body">
           Automatically returning to home in 1 Minute...
         </p>
       </div>

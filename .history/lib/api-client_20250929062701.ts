@@ -42,7 +42,7 @@ class ApiClient {
     // Response interceptor
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => {
-        // console.log(`API Response: ${response.status} ${response.config.url}`)
+        console.log(`API Response: ${response.status} ${response.config.url}`)
         return response
       },
       (error) => {
@@ -88,7 +88,7 @@ class ApiClient {
 
   updateBaseURL(newBaseURL: string) {
     this.instance.defaults.baseURL = newBaseURL
-    // console.log(`API Base URL updated to: ${newBaseURL}`)
+    console.log(`API Base URL updated to: ${newBaseURL}`)
   }
 }
 

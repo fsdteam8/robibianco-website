@@ -184,8 +184,8 @@ export default function SpinWheel({
       </div>
 
       <div className="px-4 py-6 sm:py-8 lg:py-10">
-        <div className="max-w-4xl mx-auto text-center flex items-center flex-col justify-center">
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 mb-6 sm:mb-10 lg:mb-12 leading-relaxed px-4 font-medium font-body">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 mb-8 sm:mb-12 lg:mb-16 leading-relaxed px-4 font-medium font-body">
             Tap the wheel to spin and reveal your prize. Every spin gives you a
             chance to win exciting rewards!
           </p>
@@ -206,7 +206,7 @@ export default function SpinWheel({
             <div className="relative">
               <div
                 ref={wheelRef}
-                className="w-80 h-80 font-body sm:w-[28rem] sm:h-[28rem] lg:w-[32rem] lg:h-[32rem] xl:w-[36rem] xl:h-[36rem] rounded-full relative overflow-hidden border-8 lg:border-12 border-gray-300 transition-transform  shadow-2xl"
+                className="w-72 h-72 font-body sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] xl:w-[36rem] xl:h-[36rem] rounded-full relative overflow-hidden border-8 lg:border-12 border-gray-300 transition-transform  shadow-2xl"
                 // onClick={handleSpin}
               >
                 <svg
