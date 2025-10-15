@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // FILE: SpinWheel.tsx
 "use client";
 

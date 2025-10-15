@@ -320,7 +320,7 @@ function WinnerScreen({ result }: WinnerScreenProps) {
         </div> */}
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 lg:mb-6 text-balance font-heading">
-          🎉 Congratulations! 🎉
+          Congratulations! 🎉
         </h1>
 
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 sm:mb-12 lg:mb-16 text-[#f97316] text-balance px-4 font-body [-webkit-text-stroke:1px_black]">

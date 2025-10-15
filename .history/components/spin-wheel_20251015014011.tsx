@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // FILE: SpinWheel.tsx
 "use client";
 
@@ -7,7 +6,6 @@ import { useRewards } from "@/hooks/use-api";
 
 import type { WheelSegment, SpinResult } from "@/types";
 
-interface SpinWheelProps {
   onSpinComplete: (result: SpinResult) => void;
 }
 
@@ -93,7 +91,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
             couponCode: segment.reward.couponCode,
             description: segment.reward.description,
             isTryAgain: segment.reward.isTryAgain,
-            prizeCode: (segment.reward as any).prizeCode || "",
+            prizeCode: segment.reward.prizeCode || "",
           },
         });
       }, 1000);

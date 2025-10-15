@@ -145,8 +145,7 @@ function QRCodeModal({ isOpen, onClose, qrDataUrl }: QRCodeModalProps) {
           <div className="flex justify-center bg-gray-100 rounded-xl p-4 sm:p-6">
             {qrDataUrl && (
               <Image
-                height={256}
-                width={256}
+                
                 src={qrDataUrl}
                 alt="Google Review QR Code"
                 className="w-56 h-56 sm:w-64 sm:h-64"
@@ -170,9 +169,9 @@ function QRCodeModal({ isOpen, onClose, qrDataUrl }: QRCodeModalProps) {
   );
 }
 
-function WinnerScreen({ result }: WinnerScreenProps) {
+function WinnerScreen({ result, onBackToHome }: WinnerScreenProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  // const qrReviewCanvasRef = useRef<HTMLCanvasElement>(null);
+  const qrReviewCanvasRef = useRef<HTMLCanvasElement>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
   const [qrReviewDataUrl, setQrReviewDataUrl] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -313,14 +312,14 @@ function WinnerScreen({ result }: WinnerScreenProps) {
 
       {/* Content */}
       <div className="relative z-10 px-4 py-8 sm:py-12 lg:py-16 text-center text-white">
-        {/* <div className="mb-6 sm:mb-8 lg:mb-12">
+        <div className="mb-6 sm:mb-8 lg:mb-12">
           <div className="text-4xl sm:text-6xl lg:text-8xl mb-4 animate-bounce">
             🎉
           </div>
-        </div> */}
+        </div>
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 lg:mb-6 text-balance font-heading">
-          🎉 Congratulations! 🎉
+          Congratulations!
         </h1>
 
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 sm:mb-12 lg:mb-16 text-[#f97316] text-balance px-4 font-body [-webkit-text-stroke:1px_black]">
@@ -378,7 +377,7 @@ function WinnerScreen({ result }: WinnerScreenProps) {
           >
             <svg
               className="w-6 h-6 sm:w-7 sm:h-7"
-              fill="black"
+              fill="currentColor"
               viewBox="0 0 24 24"
             >
               <path d="M3 11h8V3H3v8zm0 10h8v-8H3v8zm10 0h8V11h-8v10zm-1-18v6h6V3h-6z" />

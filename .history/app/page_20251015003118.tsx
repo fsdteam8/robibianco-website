@@ -14,6 +14,10 @@ import QRCodeModal from "@/components/qr-code-modal"
 import InfoModal from "@/components/info-modal"
 import GoogleReview from "@/components/google-reviews"
 
+interface SpinWheelProps {
+  onSpinComplete: (result: SpinResult) => void;
+}
+
 export default function Home() {
   const [currentStep, setCurrentStep] = useState<AppStep>("slideshow")
   // const [reviewId, setReviewId] = useState<string | null>("123")
@@ -91,9 +95,7 @@ export default function Home() {
               return <SpinWheel onSpinComplete={handleSpinComplete} />
 
             case "result":
-              return spinResult ? (
-                <ResultScreen result={spinResult} onBackToHome={handleBackToHome} />
-              ) : null
+              return <ResultScreen result={spinResult} onBackToHome={handleBackToHome} />
 
             case "review-form":
               return <GoogleReview/>

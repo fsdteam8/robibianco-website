@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// FILE: SpinWheel.tsx
 "use client";
 
 import { useState, useRef, useMemo } from "react";
 import { useRewards } from "@/hooks/use-api";
-
-import type { WheelSegment, SpinResult } from "@/types";
+import type { WheelSegment } from "@/types";
 
 interface SpinWheelProps {
-  onSpinComplete: (result: SpinResult) => void;
+  onSpinComplete: (result: { prize: { id: string; name: string } }) => void;
 }
 
-export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
+export default function SpinWheel({
+  onSpinComplete,
+}: SpinWheelProps) {
   const [hasSpun, setHasSpun] = useState(false);
   const wheelRef = useRef<HTMLDivElement>(null);
 
@@ -27,9 +26,13 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
     }
 
     const rewards = rewardsData.data.rewards;
+    // console.log("Total rewards:", rewards.length);
 
+    // Calculate segment angle based on number of rewards
     const segmentAngle = 360 / rewards.length;
+    // console.log("Segment angle:", segmentAngle);
 
+    // Generate colors array that can handle any number of segments
     const baseColors = [
       "#48a256",
       "#cdda55",
@@ -44,8 +47,8 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
     return rewards.map((reward, index) => {
       const angle = segmentAngle * index;
 
-      // FIX: Corrected the logic - if isTryAgain is TRUE, show "Try Again", otherwise show the reward name
-      const label = reward.isTryAgain
+      // Handle the label formatting
+      const label = !reward.isTryAgain
         ? "Try\nagain"
         : reward.rewardName.includes("%")
         ? reward.rewardName.replace(" Discount", "\nDiscount")
@@ -65,10 +68,11 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
   const handleSpin = () => {
     if (hasSpun || wheelSegments.length === 0) return;
 
+    // Pick a random segment
     const targetIndex = Math.floor(Math.random() * wheelSegments.length);
     const segment = wheelSegments[targetIndex];
 
-    const baseRotation = 1800;
+    const baseRotation = 1800; // 5 full rotations for effect
     const segmentAngle = 360 / wheelSegments.length;
     const finalAngle = 360 - (segment.angle + segmentAngle / 2);
     const totalRotation = baseRotation + finalAngle;
@@ -83,18 +87,13 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
 
     setTimeout(() => {
       setHasSpun(true);
-
+      
       setTimeout(() => {
-        // FIX: Include all required fields for the result screen
         onSpinComplete({
           prize: {
             id: segment.reward._id,
-            rewardName: segment.reward.rewardName,
-            couponCode: segment.reward.couponCode,
-            description: segment.reward.description,
-            isTryAgain: segment.reward.isTryAgain,
-            prizeCode: (segment.reward as any).prizeCode || "",
-          },
+            name: segment.reward.rewardName
+          }
         });
       }, 1000);
     }, 3000);
@@ -171,6 +170,11 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
             chance to win exciting rewards!
           </p>
 
+          {/* Display segment count for debugging */}
+          {/* <p className="text-sm text-gray-500 mb-4">
+            {wheelSegments.length} segments loaded
+          </p> */}
+
           <div className="relative inline-block mb-8 sm:mb-12 lg:mb-16 ">
             <div className="absolute top-6 left-1/2 transform -translate-x-1/2 -translate-y-2 sm:-translate-y-3 lg:-translate-y-4 z-30">
               <div className="relative rotate-180">
@@ -183,6 +187,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
               <div
                 ref={wheelRef}
                 className="w-80 h-80 font-body sm:w-[28rem] sm:h-[28rem] lg:w-[32rem] lg:h-[32rem] xl:w-[36rem] xl:h-[36rem] rounded-full relative overflow-hidden border-8 lg:border-12 border-gray-300 transition-transform  shadow-2xl"
+                // onClick={handleSpin}
               >
                 <svg
                   width="100%"
@@ -206,6 +211,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
                     ))}
                   </defs>
                   {wheelSegments.map((segment, index) => {
+                    // Calculate segment angle dynamically based on total segments
                     const segmentAngle = 360 / wheelSegments.length;
                     const startAngle = index * segmentAngle * (Math.PI / 180);
                     const endAngle =
@@ -230,6 +236,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
                     const iconX = 200 + 90 * Math.cos(textAngle);
                     const iconY = 200 + 90 * Math.sin(textAngle);
 
+                    // Adjust font size based on number of segments
                     const fontSize = wheelSegments.length > 8 ? "12" : "14";
 
                     return (
@@ -276,7 +283,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
                           } ${iconX} ${iconY})`}
                           className="select-none"
                         >
-                          {segment.reward.isTryAgain ? "😔" : "🎁"}
+                          {!segment.reward.isTryAgain ? "😔" : "🎁"}
                         </text>
                       </g>
                     );
@@ -294,19 +301,35 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
 
           <button
             onClick={handleSpin}
-            disabled={hasSpun || wheelSegments.length === 0}
+            disabled={
+              spinWheelMutation.isPending ||
+              hasSpun ||
+              wheelSegments.length === 0
+            }
             className={`w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto font-bold py-4 sm:py-5 lg:py-6 px-8 sm:px-10 lg:px-12 rounded-2xl text-lg sm:text-xl lg:text-2xl transition-all duration-200 font-body ${
-              hasSpun || wheelSegments.length === 0
+              spinWheelMutation.isPending ||
+              hasSpun ||
+              wheelSegments.length === 0
                 ? "bg-gray-400 cursor-not-allowed text-gray-600"
                 : "bg-[#f97316] hover:bg-[#ea580c] text-white hover:scale-105 shadow-xl hover:shadow-2xl"
             }`}
           >
-            {hasSpun ? "Spin Complete!" : "Tap to Spin"}
+            {spinWheelMutation.isPending
+              ? "Spinning..."
+              : hasSpun
+              ? "Spin Complete!"
+              : "Tap to Spin"}
           </button>
 
-          {hasSpun && (
+          {spinWheelMutation.isPending && (
             <p className="text-gray-600 mt-4 animate-pulse text-sm sm:text-base lg:text-lg font-body">
-              Good luck! Revealing your prize...
+              Good luck! Your prize is being determined...
+            </p>
+          )}
+
+          {spinWheelMutation.error && (
+            <p className="text-red-600 mt-4 bg-red-50 p-3 rounded-lg text-sm sm:text-base lg:text-lg">
+              Error: {spinWheelMutation.error.message}
             </p>
           )}
         </div>

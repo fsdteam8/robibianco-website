@@ -40,7 +40,7 @@ export default function Home() {
 
   const handleBackToHome = () => {
     // Reset all state for a fresh start
-    setCurrentStep("slideshow")
+    setCurrentStep("review-form")
     // setReviewId(null)
     setSpinResult(null)
   }
@@ -91,12 +91,7 @@ export default function Home() {
               return <SpinWheel onSpinComplete={handleSpinComplete} />
 
             case "result":
-              return spinResult ? (
-                <ResultScreen result={spinResult} onBackToHome={handleBackToHome} />
-              ) : null
-
-            case "review-form":
-              return <GoogleReview/>
+              return <ResultScreen result={spinResult} onBackToHome={handleBackToHome} />
 
             default:
               return <Slideshow onSlideClick={handleSlideClick} />

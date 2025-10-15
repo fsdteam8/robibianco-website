@@ -4,8 +4,6 @@
 import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
 import type { SpinResult } from "@/types";
-import Link from "next/link";
-import Image from "next/image";
 
 interface ResultScreenProps {
   result: SpinResult;
@@ -112,70 +110,9 @@ function Confetti() {
   );
 }
 
-// QR Code Modal Component
-interface QRCodeModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  qrDataUrl: string;
-}
-
-function QRCodeModal({ isOpen, onClose, qrDataUrl }: QRCodeModalProps) {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-md w-full animate-in">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
-            Leave a Review
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl font-bold transition"
-          >
-            ✕
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          <p className="text-gray-600 text-center text-sm sm:text-base">
-            Scan this QR code to leave a Google review
-          </p>
-
-          <div className="flex justify-center bg-gray-100 rounded-xl p-4 sm:p-6">
-            {qrDataUrl && (
-              <Image
-                height={256}
-                width={256}
-                src={qrDataUrl}
-                alt="Google Review QR Code"
-                className="w-56 h-56 sm:w-64 sm:h-64"
-              />
-            )}
-          </div>
-
-          <p className="text-gray-500 text-xs sm:text-sm text-center">
-            Point your phone camera at the code above
-          </p>
-
-          <button
-            onClick={onClose}
-            className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function WinnerScreen({ result }: WinnerScreenProps) {
+function WinnerScreen({ result, onBackToHome }: WinnerScreenProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  // const qrReviewCanvasRef = useRef<HTMLCanvasElement>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
-  const [qrReviewDataUrl, setQrReviewDataUrl] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const generateQRCode = async () => {
@@ -237,29 +174,6 @@ function WinnerScreen({ result }: WinnerScreenProps) {
     generateQRCode();
   }, [result]);
 
-  useEffect(() => {
-    const generateReviewQRCode = async () => {
-      try {
-        const reviewUrl = "https://g.page/r/CeLwsaG2phVOEBM/review";
-
-        const dataUrl = await QRCode.toDataURL(reviewUrl, {
-          width: 500,
-          margin: 2,
-          color: {
-            dark: "#000000",
-            light: "#FFFFFF",
-          },
-          errorCorrectionLevel: "H",
-        });
-        setQrReviewDataUrl(dataUrl);
-      } catch (error) {
-        console.error("Error generating review QR code:", error);
-      }
-    };
-
-    generateReviewQRCode();
-  }, []);
-
   const downloadQRCode = () => {
     if (!qrDataUrl) return;
 
@@ -304,23 +218,16 @@ function WinnerScreen({ result }: WinnerScreenProps) {
         </svg>
       </div>
 
-      {/* QR Code Modal */}
-      <QRCodeModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        qrDataUrl={qrReviewDataUrl}
-      />
-
       {/* Content */}
       <div className="relative z-10 px-4 py-8 sm:py-12 lg:py-16 text-center text-white">
-        {/* <div className="mb-6 sm:mb-8 lg:mb-12">
+        <div className="mb-6 sm:mb-8 lg:mb-12">
           <div className="text-4xl sm:text-6xl lg:text-8xl mb-4 animate-bounce">
             🎉
           </div>
-        </div> */}
+        </div>
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 lg:mb-6 text-balance font-heading">
-          🎉 Congratulations! 🎉
+          Congratulations!
         </h1>
 
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 sm:mb-12 lg:mb-16 text-[#f97316] text-balance px-4 font-body [-webkit-text-stroke:1px_black]">
@@ -360,29 +267,12 @@ function WinnerScreen({ result }: WinnerScreenProps) {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 max-w-xs sm:max-w-md lg:max-w-lg mx-auto font-body">
-          <Link
-            href="https://g.page/r/CeLwsaG2phVOEBM/review"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1"
-          >
-            <button className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white font-bold py-3 sm:py-4 lg:py-5 px-6 sm:px-8 lg:px-10 rounded-xl text-base sm:text-lg lg:text-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105">
-              Leave a Google Review ⭐
-            </button>
-          </Link>
-
           <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-white hover:bg-gray-100 text-[#f97316] font-bold py-3 sm:py-4 lg:py-5 px-4 sm:px-6 lg:px-8 rounded-xl text-base sm:text-lg lg:text-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2"
-            title="Scan QR code to leave review"
+            // onClick={onBackToHome}
+            className="flex-1 bg-[#f97316] hover:bg-[#ea580c] text-white font-bold py-3 sm:py-4 lg:py-5 px-6 sm:px-8 lg:px-10 rounded-xl text-base sm:text-lg lg:text-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
           >
-            <svg
-              className="w-6 h-6 sm:w-7 sm:h-7"
-              fill="black"
-              viewBox="0 0 24 24"
-            >
-              <path d="M3 11h8V3H3v8zm0 10h8v-8H3v8zm10 0h8V11h-8v10zm-1-18v6h6V3h-6z" />
-            </svg>
+            <Link href=
+            Leave a Google Review ⭐
           </button>
         </div>
 

@@ -91,9 +91,7 @@ export default function Home() {
               return <SpinWheel onSpinComplete={handleSpinComplete} />
 
             case "result":
-              return spinResult ? (
-                <ResultScreen result={spinResult} onBackToHome={handleBackToHome} />
-              ) : null
+              return <ResultScreen result={spinResult} onBackToHome={handleBackToHome} />
 
             case "review-form":
               return <GoogleReview/>

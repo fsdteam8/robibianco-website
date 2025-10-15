@@ -1,14 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // FILE: SpinWheel.tsx
 "use client";
 
 import { useState, useRef, useMemo } from "react";
 import { useRewards } from "@/hooks/use-api";
-
-import type { WheelSegment, SpinResult } from "@/types";
+import type { WheelSegment } from "@/types";
 
 interface SpinWheelProps {
-  onSpinComplete: (result: SpinResult) => void;
+  onSpinComplete: (result: {
+    prize: {
+      id: string;
+      name: string;
+      description: string;
+      couponCode: string;
+      isTryAgain: boolean;
+    };
+  }) => void;
 }
 
 export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
@@ -89,11 +95,10 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
         onSpinComplete({
           prize: {
             id: segment.reward._id,
-            rewardName: segment.reward.rewardName,
-            couponCode: segment.reward.couponCode,
+            name: segment.reward.rewardName,
             description: segment.reward.description,
+            couponCode: segment.reward.couponCode,
             isTryAgain: segment.reward.isTryAgain,
-            prizeCode: (segment.reward as any).prizeCode || "",
           },
         });
       }, 1000);

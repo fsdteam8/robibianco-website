@@ -16,7 +16,7 @@ import GoogleReview from "@/components/google-reviews"
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState<AppStep>("slideshow")
-  // const [reviewId, setReviewId] = useState<string | null>("123")
+  const [reviewId, setReviewId] = useState<string | null>("123")
   const [spinResult, setSpinResult] = useState<SpinResult | null>(null)
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
 
@@ -41,7 +41,7 @@ export default function Home() {
   const handleBackToHome = () => {
     // Reset all state for a fresh start
     setCurrentStep("slideshow")
-    // setReviewId(null)
+    setReviewId(null)
     setSpinResult(null)
   }
 
@@ -88,12 +88,10 @@ export default function Home() {
               return <SpinIntro onStart={handleSpinIntroStart} />
 
             case "spin-wheel":
-              return <SpinWheel onSpinComplete={handleSpinComplete} />
+              return <SpinWheel reviewId={reviewId} onSpinComplete={handleSpinComplete} />
 
             case "result":
-              return spinResult ? (
-                <ResultScreen result={spinResult} onBackToHome={handleBackToHome} />
-              ) : null
+              return <ResultScreen result={spinResult} onBackToHome={handleBackToHome} />
 
             case "review-form":
               return <GoogleReview/>

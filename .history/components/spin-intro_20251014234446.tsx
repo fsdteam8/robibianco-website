@@ -41,10 +41,10 @@ export default function SpinIntro({ onStart }: SpinIntroProps) {
         <div className="relative z-20 px-6 py-16 text-center flex items-center justify-center min-h-[80vh]">
           <div className="max-w-md mx-auto bg-black/70 backdrop-blur-sm rounded-2xl p-8 text-white">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 leading-tight font-heading ">
-              Spin the Wheel, Win Prizes & Leave a Review!
+              Leave a Review, Spin the Wheel, Win Prizes!
             </h2>
             <p className="text-lg mb-8 opacity-90 font-body">
-              Spin our prize wheel for chance to win amazing
+              Rate us 5-stars and spin our prize wheel for chance to win amazing
               discount!
             </p>
             <button
