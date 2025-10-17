@@ -39,9 +39,9 @@ export default function QRCodeModal({
       <canvas ref={canvasRef} className="border border-gray-200 rounded-lg" />
       <div className="text-center">
         <p className="text-sm text-gray-100 mb-2">
-          Scan with your phone camera or search for the link below:
+          Scan with your phone
         </p>
-        <p className="text-xs text-white break-all">{url}</p>
+        <p className="text-xs text-gray-500 break-all">{url}</p>
       </div>
     </div>
   );

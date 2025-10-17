@@ -40,7 +40,7 @@ const slides = [
 
 export default function Slideshow({ onSlideClick }: SlideshowProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
-  // const [showSkipButton, setShowSkipButton] = useState(false);
+  const [showSkipButton, setShowSkipButton] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -50,13 +50,13 @@ export default function Slideshow({ onSlideClick }: SlideshowProps) {
     return () => clearInterval(timer);
   }, []);
 
-  // useEffect(() => {
-  //   const skipTimer = setTimeout(() => {
-  //     setShowSkipButton(true);
-  //   }, 4000);
+  useEffect(() => {
+    const skipTimer = setTimeout(() => {
+      setShowSkipButton(true);
+    }, 4000);
 
-  //   return () => clearTimeout(skipTimer);
-  // }, []);
+    return () => clearTimeout(skipTimer);
+  }, []);
 
   const handleSlideClick = () => {
     onSlideClick();

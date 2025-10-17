@@ -40,7 +40,7 @@ const slides = [
 
 export default function Slideshow({ onSlideClick }: SlideshowProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
-  // const [showSkipButton, setShowSkipButton] = useState(false);
+  const [showSkipButton, setShowSkipButton] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -50,13 +50,13 @@ export default function Slideshow({ onSlideClick }: SlideshowProps) {
     return () => clearInterval(timer);
   }, []);
 
-  // useEffect(() => {
-  //   const skipTimer = setTimeout(() => {
-  //     setShowSkipButton(true);
-  //   }, 4000);
+  useEffect(() => {
+    const skipTimer = setTimeout(() => {
+      setShowSkipButton(true);
+    }, 4000);
 
-  //   return () => clearTimeout(skipTimer);
-  // }, []);
+    return () => clearTimeout(skipTimer);
+  }, []);
 
   const handleSlideClick = () => {
     onSlideClick();
@@ -89,16 +89,8 @@ export default function Slideshow({ onSlideClick }: SlideshowProps) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-              <div className="flex items-center justify-between w-[600px] mb-4 mx-auto">
+              <div>
                 <QRCodeModal />
-                <div className="">
-                  <Button
-                    onClick={handleSkipClick}
-                    className="bg-[#f97316]  hover:bg-[#ea580c] text-white px-6 py-3 rounded-full font-semibold shadow-lg transition-all duration-300 transform hover:scale-105"
-                  >
-                    Skip to Spin & Win
-                  </Button>
-                </div>
               </div>
               <div>
                 <h1 className="text-4xl md:text-8xl font-bold mb-4 leading-tight font-heading">
@@ -115,6 +107,17 @@ export default function Slideshow({ onSlideClick }: SlideshowProps) {
           </div>
         </div>
       ))}
+
+      {showSkipButton && (
+        <div className="absolute z-10 flex justify-center items-start min-h-screen w-full pt-40">
+          <Button
+            onClick={handleSkipClick}
+            className="bg-[#f97316]  hover:bg-[#ea580c] text-white px-6 py-3 rounded-full font-semibold shadow-lg transition-all duration-300 transform hover:scale-105"
+          >
+            Skip to Spin & Win
+          </Button>
+        </div>
+      )}
 
       {/* Slide indicators */}
       <div className="absolute bottom-20 left-6 flex space-x-2">

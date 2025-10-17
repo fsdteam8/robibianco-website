@@ -7,6 +7,10 @@ import SpinIntro from "@/components/spin-intro"
 // import ReviewForm from "@/components/review-form"
 import SpinWheel from "@/components/spin-wheel"
 import ResultScreen from "@/components/result-screen"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { QrCode } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import QRCodeModal from "@/components/qr-code-modal"
 import InfoModal from "@/components/info-modal"
 import GoogleReview from "@/components/google-reviews"
 
@@ -14,6 +18,7 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState<AppStep>("slideshow")
   // const [reviewId, setReviewId] = useState<string | null>("123")
   const [spinResult, setSpinResult] = useState<SpinResult | null>(null)
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false)
 
   const handleSlideClick = () => {
     setCurrentStep("spin-intro")
@@ -55,9 +60,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* <TopBar /> */}
-       <div className="absolute top-6 left-6 z-50 space-x-2 flex">
-        <InfoModal/>
-       </div>
+     
        
       <div >
         {(() => {

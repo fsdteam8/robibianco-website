@@ -41,7 +41,7 @@ export default function QRCodeModal({
         <p className="text-sm text-gray-100 mb-2">
           Scan with your phone camera or search for the link below:
         </p>
-        <p className="text-xs text-white break-all">{url}</p>
+        <p className="text-xs text-blue-100 break-all">{url}</p>
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState<AppStep>("slideshow")
   // const [reviewId, setReviewId] = useState<string | null>("123")
   const [spinResult, setSpinResult] = useState<SpinResult | null>(null)
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false)
 
   const handleSlideClick = () => {
     setCurrentStep("spin-intro")
