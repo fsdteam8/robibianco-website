@@ -11,7 +11,7 @@ export default function SpinIntro({ onStart }: SpinIntroProps) {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url('/home-banner.jpg')`,
+          backgroundImage: `url('/banner1.jpeg')`,
         }}
       >
         <div className="absolute inset-0 bg-black/50" />
@@ -44,8 +44,7 @@ export default function SpinIntro({ onStart }: SpinIntroProps) {
               Spin the Wheel, Win Prizes & Leave a Review!
             </h2>
             <p className="text-lg mb-8 opacity-90 font-body">
-              Spin our prize wheel for chance to win amazing
-              discount!
+              Spin our prize wheel for chance to win amazing discount!
             </p>
             <button
               onClick={onStart}

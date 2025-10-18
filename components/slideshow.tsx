@@ -14,27 +14,18 @@ interface SlideshowProps {
 const slides = [
   {
     id: 1,
-    image: "/home-banner.jpg",
-    title: "Get daily Calorie everything you eat",
-    subtitle:
-      "We are uploading our food database every minute to help you track your calories",
-    highlightWord: "Calorie",
+    image: "/banner1.jpeg",
+    title: "Spin the wheel and grab a prize from our bar or kitchen!",
   },
   {
     id: 2,
-    image: "/home-banner2.jpg",
-    title: "Get daily Calorie everything you eat",
-    subtitle:
-      "We are uploading our food database every minute to help you track your calories",
-    highlightWord: "Calorie",
+    image: "/banner2.jpeg",
+    title: "Griez ratu un laimē balvu no mūsu bāra vai virtuves!",
   },
   {
     id: 3,
-    image: "/home-banner3.jpg",
-    title: "Get daily Calorie everything you eat",
-    subtitle:
-      "We are uploading our food database every minute to help you track your calories",
-    highlightWord: "Calorie",
+    image: "/banner3.jpeg",
+    title: "Крути колесо и получай приз из нашего бара или кухни!",
   },
 ];
 
@@ -81,52 +72,38 @@ export default function Slideshow({ onSlideClick }: SlideshowProps) {
         >
           <div className="relative h-full w-full ">
             <Image
-              src={slide.image || "/placeholder.svg"}
+              src={slide.image}
               alt={`Slide ${slide.id}`}
               fill
               className="object-cover"
               priority={index === 0}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-              <div className="flex items-center justify-between w-[600px] mb-4 mx-auto">
-                <QRCodeModal />
-                <div className="">
-                  <Button
-                    onClick={handleSkipClick}
-                    className="bg-[#f97316]  hover:bg-[#ea580c] text-white px-6 py-3 rounded-full font-semibold shadow-lg transition-all duration-300 transform hover:scale-105"
-                  >
-                    Skip to Spin & Win
-                  </Button>
+            <div className="absolute  inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-white">
+              <div className="flex flex-col items-center justify-center space-y-10">
+                <div className="flex items-stretch justify-center space-x-5">
+                  <div className="hidden lg:block">
+                    <QRCodeModal />
+                  </div>
+                  <div className="">
+                    <Button
+                      onClick={handleSkipClick}
+                      className="bg-[#f97316] h-full aspect-square hover:bg-[#ea580c] text-white px-6 py-3 text-xl font-bold shadow-lg"
+                    >
+                      Skip to Spin & Win
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <h1 className="text-4xl md:text-8xl font-bold mb-4 leading-tight font-heading">
-                  Get daily{" "}
-                  <span className="text-[#a2e62e] ">{slide.highlightWord}</span>
-                  <br />
-                  everything you eat
-                </h1>
-                <p className="text-lg md:text-xl opacity-90 max-w-2xl font-body">
-                  {slide.subtitle}
-                </p>
+                <div className="text-center lg:px-12 md:px-6 px-1">
+                  <h1 className="text-4xl md:text-5xl lg:text-8xl font-bold mb-4 leading-tight font-heading text-center">
+                    {slide.title}
+                  </h1>
+                </div>
               </div>
             </div>
           </div>
         </div>
       ))}
-
-      {/* Slide indicators */}
-      <div className="absolute bottom-20 left-6 flex space-x-2">
-        {slides.map((_, index) => (
-          <div
-            key={index}
-            className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-              index === currentSlide ? "bg-white " : "bg-white/50 "
-            }`}
-          />
-        ))}
-      </div>
     </div>
   );
 }

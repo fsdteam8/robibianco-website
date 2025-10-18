@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import type { AppStep, SpinResult } from "@/types"
-import Slideshow from "@/components/slideshow"
-import SpinIntro from "@/components/spin-intro"
+import { useState } from "react";
+import type { AppStep, SpinResult } from "@/types";
+import Slideshow from "@/components/slideshow";
+import SpinIntro from "@/components/spin-intro";
 // import ReviewForm from "@/components/review-form"
-import SpinWheel from "@/components/spin-wheel"
-import ResultScreen from "@/components/result-screen"
-import InfoModal from "@/components/info-modal"
-import GoogleReview from "@/components/google-reviews"
+import SpinWheel from "@/components/spin-wheel";
+import ResultScreen from "@/components/result-screen";
+import InfoModal from "@/components/info-modal";
+import GoogleReview from "@/components/google-reviews";
 
 export default function Home() {
-  const [currentStep, setCurrentStep] = useState<AppStep>("slideshow")
+  const [currentStep, setCurrentStep] = useState<AppStep>("slideshow");
   // const [reviewId, setReviewId] = useState<string | null>("123")
-  const [spinResult, setSpinResult] = useState<SpinResult | null>(null)
+  const [spinResult, setSpinResult] = useState<SpinResult | null>(null);
 
   const handleSlideClick = () => {
-    setCurrentStep("spin-intro")
-  }
+    setCurrentStep("spin-intro");
+  };
 
   const handleSpinIntroStart = () => {
-    setCurrentStep("spin-wheel")
-  }
+    setCurrentStep("spin-wheel");
+  };
 
   // const handleReviewSubmit = (id: string) => {
   //   setReviewId(id)
@@ -29,16 +29,16 @@ export default function Home() {
   // }
 
   const handleSpinComplete = (result: SpinResult) => {
-    setSpinResult(result)
-    setCurrentStep("result")
-  }
+    setSpinResult(result);
+    setCurrentStep("result");
+  };
 
   const handleBackToHome = () => {
     // Reset all state for a fresh start
-    setCurrentStep("slideshow")
+    setCurrentStep("slideshow");
     // setReviewId(null)
-    setSpinResult(null)
-  }
+    setSpinResult(null);
+  };
 
   // Allow user to try again only if they haven't spun yet
   // const handleTryAgain = () => {
@@ -49,41 +49,42 @@ export default function Home() {
   //   }
   // }
 
-  
-
   // Render current step
   return (
     <div className="min-h-screen">
       {/* <TopBar /> */}
-       <div className="absolute top-6 left-6 z-50 space-x-2 flex">
-        <InfoModal/>
-       </div>
-       
-      <div >
+      <div className="absolute top-6 left-6 z-50 space-x-2 flex">
+        <InfoModal />
+      </div>
+
+      <div>
         {(() => {
           switch (currentStep) {
             case "slideshow":
-              return <Slideshow onSlideClick={handleSlideClick} />
+              return <Slideshow onSlideClick={handleSlideClick} />;
 
             case "spin-intro":
-              return <SpinIntro onStart={handleSpinIntroStart} />
+              return <SpinIntro onStart={handleSpinIntroStart} />;
 
             case "spin-wheel":
-              return <SpinWheel onSpinComplete={handleSpinComplete} />
+              return <SpinWheel onSpinComplete={handleSpinComplete} />;
 
             case "result":
               return spinResult ? (
-                <ResultScreen result={spinResult} onBackToHome={handleBackToHome} />
-              ) : null
+                <ResultScreen
+                  result={spinResult}
+                  onBackToHome={handleBackToHome}
+                />
+              ) : null;
 
             case "review-form":
-              return <GoogleReview/>
+              return <GoogleReview />;
 
             default:
-              return <Slideshow onSlideClick={handleSlideClick} />
+              return <Slideshow onSlideClick={handleSlideClick} />;
           }
         })()}
       </div>
     </div>
-  )
+  );
 }
