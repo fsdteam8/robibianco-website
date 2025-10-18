@@ -8,7 +8,7 @@ interface QRCodeModalProps {
 }
 
 export default function QRCodeModal({
-  url = "https://robibianco-website.vercel.app/",
+  url = process.env.NEXT_PUBLIC_SITE_URL,
 }: QRCodeModalProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -16,7 +16,7 @@ export default function QRCodeModal({
     if (canvasRef.current) {
       QRCode.toCanvas(
         canvasRef.current,
-        url,
+        url ?? "",
         {
           width: 400,
           margin: 2,
@@ -35,14 +35,8 @@ export default function QRCodeModal({
   }, [url]);
 
   return (
-    <div className="flex flex-col items-center gap-4 py-4 font-body">
+    <div className="flex flex-col items-center font-body">
       <canvas ref={canvasRef} className="border border-gray-200 rounded-lg" />
-      <div className="text-center">
-        <p className="text-sm text-gray-100 mb-2">
-          Scan with your phone camera or search for the link below:
-        </p>
-        <p className="text-xs text-white break-all">{url}</p>
-      </div>
     </div>
   );
 }
