@@ -21,7 +21,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
     error: rewardsError,
   } = useRewards();
 
-  const filteredData: WheelSegment[] = useMemo(() => {
+  const wheelSegments: WheelSegment[] = useMemo(() => {
     if (!rewardsData?.data?.rewards) {
       return [];
     }
@@ -61,12 +61,11 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
       };
     });
   }, [rewardsData]);
-  const wheelSegments = filteredData.filter((item) => item.reward.stock > 0);
+  const filteredData = data.filter((item) => item.reward.stock > 0);
 
-  // console.log(filteredData);
+  console.log(filteredData);
 
-  // console.log(wheelSegments);
-
+console.log(wheelSegments);
   const handleSpin = () => {
     if (hasSpun || wheelSegments.length === 0) return;
 

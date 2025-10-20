@@ -21,7 +21,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
     error: rewardsError,
   } = useRewards();
 
-  const filteredData: WheelSegment[] = useMemo(() => {
+  const wheelSegments: WheelSegment[] = useMemo(() => {
     if (!rewardsData?.data?.rewards) {
       return [];
     }
@@ -61,11 +61,6 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
       };
     });
   }, [rewardsData]);
-  const wheelSegments = filteredData.filter((item) => item.reward.stock > 0);
-
-  // console.log(filteredData);
-
-  // console.log(wheelSegments);
 
   const handleSpin = () => {
     if (hasSpun || wheelSegments.length === 0) return;
@@ -256,7 +251,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
                           dominantBaseline="middle"
                           transform={`rotate(${
                             textAngle * (180 / Math.PI) + 90
-                          } ${textX} ${textY})`}
+                          } ${textX}000 ${textY})`}
                           className="select-none"
                           style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}
                         >

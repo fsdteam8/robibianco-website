@@ -21,7 +21,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
     error: rewardsError,
   } = useRewards();
 
-  const filteredData: WheelSegment[] = useMemo(() => {
+  const wheelSegments: WheelSegment[] = useMemo(() => {
     if (!rewardsData?.data?.rewards) {
       return [];
     }
@@ -61,11 +61,9 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
       };
     });
   }, [rewardsData]);
-  const wheelSegments = filteredData.filter((item) => item.reward.stock > 0);
+  const filteredData = wheelSegments.filter((item) => item.reward.stock > 0);
 
-  // console.log(filteredData);
-
-  // console.log(wheelSegments);
+  console.log(filteredData);
 
   const handleSpin = () => {
     if (hasSpun || wheelSegments.length === 0) return;
@@ -196,7 +194,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
                   className="transform -rotate-90"
                 >
                   <defs>
-                    {wheelSegments.map((segment, index) => (
+                    {wheelSegments.filter((item) => item.reward.stock > 0).map((segment, index) => (
                       <linearGradient
                         key={`gradient-${index}`}
                         id={`segmentGradient-${index}`}
@@ -210,7 +208,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
                       </linearGradient>
                     ))}
                   </defs>
-                  {wheelSegments.map((segment, index) => {
+                  {wheelSegments.filter((item) => item.reward.stock > 0).map((segment, index) => {
                     const segmentAngle = 360 / wheelSegments.length;
                     const startAngle = index * segmentAngle * (Math.PI / 180);
                     const endAngle =

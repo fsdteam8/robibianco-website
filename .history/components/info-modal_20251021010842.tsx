@@ -21,7 +21,7 @@ export default function InfoModal() {
         <Button
           variant="outline"
           size="sm"
-          className="gap-2 bg-black/10 text-black hover:bg-white"
+          className="gap-2 bg-black/30 text-black hover:bg-white"
         >
           <Info className="h-4 w-4" />
           <span className="hidden md:block">Info</span>

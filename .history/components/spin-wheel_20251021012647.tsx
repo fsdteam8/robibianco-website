@@ -21,7 +21,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
     error: rewardsError,
   } = useRewards();
 
-  const filteredData: WheelSegment[] = useMemo(() => {
+  const wheelSegments: WheelSegment[] = useMemo(() => {
     if (!rewardsData?.data?.rewards) {
       return [];
     }
@@ -61,11 +61,9 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
       };
     });
   }, [rewardsData]);
-  const wheelSegments = filteredData.filter((item) => item.reward.stock > 0);
+  const filteredData = wheelSegments.filter((item) => item.reward.stock > 0);
 
-  // console.log(filteredData);
-
-  // console.log(wheelSegments);
+  console.log(filteredData);
 
   const handleSpin = () => {
     if (hasSpun || wheelSegments.length === 0) return;
@@ -196,96 +194,114 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
                   className="transform -rotate-90"
                 >
                   <defs>
-                    {wheelSegments.map((segment, index) => (
-                      <linearGradient
-                        key={`gradient-${index}`}
-                        id={`segmentGradient-${index}`}
-                        x1="0%"
-                        y1="0%"
-                        x2="100%"
-                        y2="100%"
-                      >
-                        <stop offset="0%" stopColor={segment.color} />
-                        <stop offset="100%" stopColor={segment.color + "DD"} />
-                      </linearGradient>
-                    ))}
+                    {wheelSegments
+                      .filter((item) => item.reward.stock > 0)
+                      .map((segment, index) => (
+                        <linearGradient
+                          key={`gradient-${index}`}
+                          id={`segmentGradient-${index}`}
+                          x1="0%"
+                          y1="0%"
+                          x2="100%"
+                          y2="100%"
+                        >
+                          <stop offset="0%" stopColor={segment.color} />
+                          <stop
+                            offset="100%"
+                            stopColor={segment.color + "DD"}
+                          />
+                        </linearGradient>
+                      ))}
                   </defs>
-                  {wheelSegments.map((segment, index) => {
-                    const segmentAngle = 360 / wheelSegments.length;
-                    const startAngle = index * segmentAngle * (Math.PI / 180);
-                    const endAngle =
-                      (index + 1) * segmentAngle * (Math.PI / 180);
-                    const largeArcFlag = segmentAngle > 180 ? 1 : 0;
+                  {wheelSegments
+                    .filter((item) => item.reward.stock > 0)
+                    .map((segment, index) => {
+                      const segmentAngle = 360 / wheelSegments.length;
+                      const startAngle = index * segmentAngle * (Math.PI / 180);
+                      const endAngle =
+                        (index + 1) * segmentAngle * (Math.PI / 180);
+                      const largeArcFlag = segmentAngle > 180 ? 1 : 0;
 
-                    const x1 = 200 + 190 * Math.cos(startAngle);
-                    const y1 = 200 + 190 * Math.sin(startAngle);
-                    const x2 = 200 + 190 * Math.cos(endAngle);
-                    const y2 = 200 + 190 * Math.sin(endAngle);
+                      const x1 = 200 + 190 * Math.cos(startAngle);
+                      const y1 = 200 + 190 * Math.sin(startAngle);
+                      const x2 = 200 + 190 * Math.cos(endAngle);
+                      const y2 = 200 + 190 * Math.sin(endAngle);
 
-                    const pathData = [
-                      `M 200 200`,
-                      `L ${x1} ${y1}`,
-                      `A 190 190 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-                      "Z",
-                    ].join(" ");
+                      const pathData = [
+                        `M 200 200`,
+                        `L ${x1} ${y1}`,
+                        `A 190 190 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+                        "Z",
+                      ].join(" ");
 
-                    const textAngle = startAngle + (endAngle - startAngle) / 2;
-                    const textX = 200 + 130 * Math.cos(textAngle);
-                    const textY = 200 + 130 * Math.sin(textAngle);
-                    const iconX = 200 + 90 * Math.cos(textAngle);
-                    const iconY = 200 + 90 * Math.sin(textAngle);
+                      const textAngle =
+                        startAngle + (endAngle - startAngle) / 2;
+                      const textX = 200 + 130 * Math.cos(textAngle);
+                      const textY = 200 + 130 * Math.sin(textAngle);
+                      const iconX = 200 + 90 * Math.cos(textAngle);
+                      const iconY = 200 + 90 * Math.sin(textAngle);
 
-                    const fontSize = wheelSegments.length > 8 ? "12" : "14";
+                      const fontSize = wheelSegments.length > 8 ? "12" : "14";
 
-                    return (
-                      <g key={segment.reward._id}>
-                        <path
-                          d={pathData}
-                          fill={`url(#segmentGradient-${index})`}
-                          stroke="#fff"
-                          strokeWidth="2"
-                          filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))"
-                        />
-                        <text
-                          x={textX}
-                          y={textY}
-                          fill="white"
-                          fontSize={fontSize}
-                          fontWeight="bold"
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          transform={`rotate(${
-                            textAngle * (180 / Math.PI) + 90
-                          } ${textX} ${textY})`}
-                          className="select-none"
-                          style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.5)" }}
-                        >
-                          {segment.label.split("\n").map((line, lineIndex) => (
-                            <tspan
-                              key={lineIndex}
-                              x={textX}
-                              dy={lineIndex === 0 ? 0 : "1.2em"}
-                            >
-                              {line}
-                            </tspan>
-                          ))}
-                        </text>
-                        <text
-                          x={iconX}
-                          y={iconY}
-                          fontSize={wheelSegments.length > 8 ? "16" : "20"}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          transform={`rotate(${
-                            textAngle * (180 / Math.PI) + 90
-                          } ${iconX} ${iconY})`}
-                          className="select-none"
-                        >
-                          {segment.reward.isTryAgain ? "😔" : "🎁"}
-                        </text>
-                      </g>
-                    );
-                  })}
+                      return (
+                        <g key={segment.reward._id}>
+                          <path
+                            d={pathData}
+                            fill={`url(#segmentGradient-${index})`}
+                            stroke="#fff"
+                            strokeWidth="2"
+                            filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))"
+                          />
+                          <text
+                            x={textX}
+                            y={textY}
+                            fill="white"
+                            fontSize={fontSize}
+                            fontWeight="bold"
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                            transform={`rotate(${
+                              textAngle * (180 / Math.PI) + 90
+                            } ${textX} ${textY})`}
+                            className="select-none"
+                            style={{
+                              textShadow: "1px 1px 2px rgba(0,0,0,0.5)",
+                            }}
+                          >
+                            {segment.label
+                              .split("\n")
+                              .map((line, lineIndex) => (
+                                <tspan
+                                  key={lineIndex}
+                                  x={textX}
+                                  dy={lineIndex === 0 ? 0 : "1.2em"}
+                                >
+                                  {line}
+                                </tspan>
+                              ))}
+                          </text>
+                          <text
+                            x={iconX}
+                            y={iconY}
+                            fontSize={
+                              wheelSegments.filter(
+                                (item) => item.reward.stock > 0
+                              ).length > 8
+                                ? "16"
+                                : "20"
+                            }
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                            transform={`rotate(${
+                              textAngle * (180 / Math.PI) + 90
+                            } ${iconX} ${iconY})`}
+                            className="select-none"
+                          >
+                            {segment.reward.isTryAgain ? "😔" : "🎁"}
+                          </text>
+                        </g>
+                      );
+                    })}
                 </svg>
 
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-black rounded-full flex items-center justify-center z-10 shadow-2xl border-4 border-white">

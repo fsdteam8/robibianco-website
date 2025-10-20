@@ -61,12 +61,11 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
       };
     });
   }, [rewardsData]);
-  const wheelSegments = filteredData.filter((item) => item.reward.stock > 0);
+  const  wheelSegments = wheelSegments.filter((item) => item.reward.stock > 0);
 
-  // console.log(filteredData);
+  console.log(filteredData);
 
-  // console.log(wheelSegments);
-
+console.log(wheelSegments);
   const handleSpin = () => {
     if (hasSpun || wheelSegments.length === 0) return;
 
