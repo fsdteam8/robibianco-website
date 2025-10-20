@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useRef, useMemo } from "react";
-import { useRewards, useSpinResult } from "@/hooks/use-api";
+import { useRewards } from "@/hooks/use-api";
 
 import type { WheelSegment, SpinResult } from "@/types";
 
@@ -69,7 +69,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
 
   const { mutateAsync: submitSpinResult } = useSpinResult();
 
-  const handleSpin = () => {
+const handleSpin = () => {
     if (hasSpun || wheelSegments.length === 0) return;
 
     const targetIndex = Math.floor(Math.random() * wheelSegments.length);
@@ -94,9 +94,9 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
 
       try {
         const spinResponse = await submitSpinResult({
-          rewardId: segment.reward._id,
+          rewardId: segment.reward._id
         });
-
+        
         setTimeout(() => {
           onSpinComplete({
             prize: {
@@ -109,11 +109,11 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
             },
             spinDetails: spinResponse.data?.spin,
             qrCode: spinResponse.data?.qrCode,
-            redeemLink: spinResponse.data?.link,
+            redeemLink: spinResponse.data?.link
           });
         }, 1000);
       } catch (error) {
-        console.error("Error submitting spin result:", error);
+        console.error('Error submitting spin result:', error);
         // Still complete with basic info if API fails
         onSpinComplete({
           prize: {
@@ -123,7 +123,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
             description: segment.reward.description,
             isTryAgain: segment.reward.isTryAgain,
             prizeCode: "",
-          },
+          }
         });
       }
     }, 3000);

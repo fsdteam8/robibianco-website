@@ -137,7 +137,7 @@ function QRCodeModal({ isOpen, onClose, qrDataUrl }: QRCodeModalProps) {
           </button>
         </div>
 
-        <div className="space-y-4">
+                <div className="space-y-4">
           <p className="text-gray-600 text-center text-sm sm:text-base">
             Scan this QR code to redeem your prize
           </p>
@@ -160,15 +160,70 @@ function QRCodeModal({ isOpen, onClose, qrDataUrl }: QRCodeModalProps) {
 }
 
 function WinnerScreen({ result }: WinnerScreenProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // const qrReviewCanvasRef = useRef<HTMLCanvasElement>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
   const [qrReviewDataUrl, setQrReviewDataUrl] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    // Use the provided QR code from the API response
-    if (result.qrCode) {
-      setQrDataUrl(result.qrCode);
-    }
+    const generateQRCode = async () => {
+      if (!canvasRef.current) return;
+
+      try {
+        const qrData = `
+          🎉 CONGRATULATIONS! 🎉
+
+          Prize: ${result.prize.rewardName}
+          Description: ${result.prize.description}
+
+          ${
+            result.prize.couponCode
+              ? `Coupon Code: ${result.prize.couponCode}`
+              : ""
+          }
+          ${
+            result.prize.couponCode
+              ? `Prize Code: ${result.prize.couponCode}`
+              : `Prize Code: PRIZE-${Date.now()}`
+          }
+
+          Valid Until: ${new Date(
+            Date.now() + 30 * 24 * 60 * 60 * 1000
+          ).toLocaleDateString()}
+
+          To redeem:
+          1. Show this QR code at checkout
+          2. Or use the codes above online
+          3. Visit: https://robibianco-website.vercel.app/
+
+          Thank you for spinning with us!
+        `.trim();
+
+        await QRCode.toCanvas(canvasRef.current, qrData, {
+          width: 200,
+          margin: 2,
+          color: {
+            dark: "#000000",
+            light: "#FFFFFF",
+          },
+        });
+
+        const dataUrl = await QRCode.toDataURL(qrData, {
+          width: 400,
+          margin: 2,
+          color: {
+            dark: "#000000",
+            light: "#FFFFFF",
+          },
+        });
+        setQrDataUrl(dataUrl);
+      } catch (error) {
+        console.error("Error generating QR code:", error);
+      }
+    };
+
+    generateQRCode();
   }, [result]);
 
   useEffect(() => {
@@ -264,22 +319,12 @@ function WinnerScreen({ result }: WinnerScreenProps) {
         <div className="max-w-xs sm:max-w-md lg:max-w-lg mx-auto bg-[#cdda55] text-black rounded-2xl p-4 sm:p-6 lg:p-8 mb-8 sm:mb-12 lg:mb-16 shadow-2xl">
           {/* QR Code */}
           <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto mb-4 sm:mb-6 bg-white rounded-lg flex items-center justify-center p-2 sm:p-4">
-            {qrDataUrl ? (
-              <Image
-                src={qrDataUrl}
-                alt="Prize QR Code"
-                width={224}
-                height={224}
-                className="max-w-full max-h-full"
-              />
-            ) : (
-              <div className="animate-pulse bg-gray-200 w-full h-full rounded" />
-            )}
+            <canvas ref={canvasRef} className="max-w-full max-h-full" />
           </div>
 
           <div className="space-y-2 sm:space-y-3 font-body">
             <p className="font-bold text-sm sm:text-lg lg:text-xl">
-              Prize: {result.prize.couponCode || `PRIZE-${Date.now()}`}
+              Prize Code: {result.prize.couponCode || `PRIZE-${Date.now()}`}
             </p>
             <p className="text-xs sm:text-sm lg:text-base leading-relaxed">
               {result.prize.description}

@@ -36,7 +36,6 @@ export interface SubmitReviewResponse {
   success: boolean
   message: string
   data: {
-    qrCode: string | undefined
     spin: any
     reviewId: string
   }

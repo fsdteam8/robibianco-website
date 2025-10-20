@@ -160,6 +160,8 @@ function QRCodeModal({ isOpen, onClose, qrDataUrl }: QRCodeModalProps) {
 }
 
 function WinnerScreen({ result }: WinnerScreenProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // const qrReviewCanvasRef = useRef<HTMLCanvasElement>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
   const [qrReviewDataUrl, setQrReviewDataUrl] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -36,8 +36,6 @@ export interface SubmitReviewResponse {
   success: boolean
   message: string
   data: {
-    qrCode: string | undefined
-    spin: any
     reviewId: string
   }
 }
@@ -46,22 +44,7 @@ export interface SpinWheelResponse {
   statusCode: number
   success: boolean
   message: string
-  data: {
-    spin: {
-      spinResult: string
-      uniqueCode: string
-      ipAddress: string
-      deviceInfo: {
-        userAgent: string
-      }
-      fingerprint: string
-      _id: string
-      createdAt: string
-      updatedAt: string
-    }
-    qrCode: string
-    link: string
-  }
+  data: SpinResult
 }
 
 export interface Reward {

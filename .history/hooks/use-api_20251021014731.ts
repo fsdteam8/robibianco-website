@@ -70,11 +70,11 @@ export function useRewards() {
 }
 
 
-export function useSpinResult() {
+export function useSubmitReview() {
   return useMutation<SubmitReviewResponse, Error, ReviewData>({
     mutationFn: async (reviewData: ReviewData) => {
       try {
-        const result = await apiClient.post<SubmitReviewResponse>("/result/spin", reviewData)
+        const result = await apiClient.post<SubmitReviewResponse>("/spin-win/submit-review", reviewData)
 
         if (!result.success) {
           throw new Error(result.message || "Failed to submit review")

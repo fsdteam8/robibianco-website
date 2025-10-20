@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useRef, useMemo } from "react";
-import { useRewards, useSpinResult } from "@/hooks/use-api";
+import { useRewards } from "@/hooks/use-api";
 
 import type { WheelSegment, SpinResult } from "@/types";
 
@@ -67,8 +67,6 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
 
   // console.log(wheelSegments);
 
-  const { mutateAsync: submitSpinResult } = useSpinResult();
-
   const handleSpin = () => {
     if (hasSpun || wheelSegments.length === 0) return;
 
@@ -89,32 +87,11 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
       wheelRef.current.classList.add("spin-animation");
     }
 
-    setTimeout(async () => {
+    setTimeout(() => {
       setHasSpun(true);
 
-      try {
-        const spinResponse = await submitSpinResult({
-          rewardId: segment.reward._id,
-        });
-
-        setTimeout(() => {
-          onSpinComplete({
-            prize: {
-              id: segment.reward._id,
-              rewardName: segment.reward.rewardName,
-              couponCode: segment.reward.couponCode,
-              description: segment.reward.description,
-              isTryAgain: segment.reward.isTryAgain,
-              prizeCode: spinResponse.data?.spin?.uniqueCode || "",
-            },
-            spinDetails: spinResponse.data?.spin,
-            qrCode: spinResponse.data?.qrCode,
-            redeemLink: spinResponse.data?.link,
-          });
-        }, 1000);
-      } catch (error) {
-        console.error("Error submitting spin result:", error);
-        // Still complete with basic info if API fails
+      setTimeout(() => {
+        // FIX: Include all required fields for the result screen
         onSpinComplete({
           prize: {
             id: segment.reward._id,
@@ -122,10 +99,10 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
             couponCode: segment.reward.couponCode,
             description: segment.reward.description,
             isTryAgain: segment.reward.isTryAgain,
-            prizeCode: "",
+            prizeCode: (segment.reward as any).prizeCode || "",
           },
         });
-      }
+      }, 1000);
     }, 3000);
   };
 
