@@ -29,6 +29,8 @@ export interface SpinResult {
   }
   qrCode?: string
   redeemLink?: string
+  // Optional server-provided error message (e.g. monthly limit reached)
+  errorMessage?: string
 }
 
 export interface SubmitReviewResponse {
