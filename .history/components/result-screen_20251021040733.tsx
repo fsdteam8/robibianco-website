@@ -138,9 +138,9 @@ function QRCodeModal({ isOpen, onClose, qrDataUrl }: QRCodeModalProps) {
         </div>
 
         <div className="space-y-4">
-          <p className="text-gray-600 text-center text-sm sm:text-base">
-            Scan this QR code and leave a google review
-          </p>
+          {/* <p className="text-gray-600 text-center text-sm sm:text-base">
+            Scan this QR code to redeem your prize
+          </p> */}
 
           <div className="flex justify-center bg-gray-100 rounded-xl p-4 sm:p-6">
             {qrDataUrl && (

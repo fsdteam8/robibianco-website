@@ -74,10 +74,6 @@ interface SpinResultRequest {
   rewardId: string;
 }
 
-interface SpinResultRequest {
-  rewardId: string;
-}
-
 export function useSpinResult() {
   return useMutation<SpinWheelResponse, Error, SpinResultRequest>({
     mutationFn: async (data: SpinResultRequest) => {
@@ -85,17 +81,17 @@ export function useSpinResult() {
         const result = await apiClient.post<SpinWheelResponse>("/result/spin", data)
 
         if (!result.success) {
-          throw new Error(result.message || "Failed to save spin result")
+          throw new Error(result.message || "Failed to submit review")
         }
 
         return result
       } catch (error: any) {
-        console.error("Error saving spin result:", error)
-        throw new Error(error.response?.data?.message || error.message || "Failed to save spin result")
+        console.error("  Error submitting review:", error)
+        throw new Error(error.response?.data?.message || error.message || "Failed to submit review")
       }
     },
     onError: (error) => {
-      console.error("Spin result mutation error:", error)
+      console.error("Submit review mutation error:", error)
     },
   })
 }
