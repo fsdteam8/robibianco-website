@@ -94,11 +94,11 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
 
       try {
         const spinResponse = await submitSpinResult({
-          rewardId: segment.reward._id
+          rewardId: segment.reward._id,
         });
 
         if (!spinResponse.data) {
-          throw new Error('No data received from spin result');
+          throw new Error("No data received from spin result");
         }
 
         setTimeout(() => {
@@ -117,9 +117,14 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
             redeemLink: link,
           });
         }, 1000);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error submitting spin result:", error);
-        // Still complete with basic info if API fails
+
+        // Try to extract a server-provided message (common shape: { message: string })
+        const serverMessage =
+          error?.response?.data?.message || error?.message || undefined;
+
+        // Still complete with basic info if API fails, but include any server message
         onSpinComplete({
           prize: {
             id: segment.reward._id,
@@ -129,6 +134,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
             isTryAgain: segment.reward.isTryAgain,
             prizeCode: "",
           },
+          errorMessage: serverMessage,
         });
       }
     }, 3000);
