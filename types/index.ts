@@ -15,6 +15,22 @@ export interface SpinResult {
     isTryAgain: boolean
     prizeCode: string
   }
+  spinDetails?: {
+    spinResult: string
+    uniqueCode: string
+    ipAddress: string
+    deviceInfo: {
+      userAgent: string
+    }
+    fingerprint: string
+    _id: string
+    createdAt: string
+    updatedAt: string
+  }
+  qrCode?: string
+  redeemLink?: string
+  // Optional server-provided error message (e.g. monthly limit reached)
+  errorMessage?: string
 }
 
 export interface SubmitReviewResponse {
@@ -22,6 +38,9 @@ export interface SubmitReviewResponse {
   success: boolean
   message: string
   data: {
+    qrCode: string | undefined
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    spin: any
     reviewId: string
   }
 }
@@ -30,7 +49,22 @@ export interface SpinWheelResponse {
   statusCode: number
   success: boolean
   message: string
-  data: SpinResult
+  data: {
+    spin: {
+      spinResult: string
+      uniqueCode: string
+      ipAddress: string
+      deviceInfo: {
+        userAgent: string
+      }
+      fingerprint: string
+      _id: string
+      createdAt: string
+      updatedAt: string
+    }
+    qrCode: string
+    link: string
+  }
 }
 
 export interface Reward {

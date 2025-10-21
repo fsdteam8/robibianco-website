@@ -68,3 +68,34 @@ export function useRewards() {
     gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime)
   })
 }
+
+
+interface SpinResultRequest {
+  rewardId: string;
+}
+
+interface SpinResultRequest {
+  rewardId: string;
+}
+
+export function useSpinResult() {
+  return useMutation<SpinWheelResponse, Error, SpinResultRequest>({
+    mutationFn: async (data: SpinResultRequest) => {
+      try {
+        const result = await apiClient.post<SpinWheelResponse>("/result/spin", data)
+
+        if (!result.success) {
+          throw new Error(result.message || "Failed to save spin result")
+        }
+
+        return result
+      } catch (error: any) {
+        console.error("Error saving spin result:", error)
+        throw new Error(error.response?.data?.message || error.message || "Failed to save spin result")
+      }
+    },
+    onError: (error) => {
+      console.error("Spin result mutation error:", error)
+    },
+  })
+}

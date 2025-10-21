@@ -51,7 +51,7 @@ export default function Home() {
 
   // Render current step
   return (
-    <div className="min-h-screen">
+    <div className="max-h-screen">
       {/* <TopBar /> */}
       <div className="absolute top-6 left-6 z-50 space-x-2 flex">
         <InfoModal />

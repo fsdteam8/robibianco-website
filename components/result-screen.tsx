@@ -27,8 +27,36 @@ export default function ResultScreen({
     return () => clearTimeout(timer);
   }, [onBackToHome]);
 
+  // If the server returned an error message (e.g. monthly limit), show only that message
+  if (result.errorMessage) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center px-4">
+        <div className="max-w-xl w-full text-center">
+          <div className="mb-6">
+            <h2 className="text-xl sm:text-5xl font-bold text-red-700 font-body">
+              {result.errorMessage}
+            </h2>
+          </div>
+          <div>
+            <button
+              onClick={onBackToHome}
+              className="mt-4 inline-block bg-[#f97316] hover:bg-[#ea580c] text-white font-semibold py-2 px-4 rounded-lg"
+            >
+              Back to Home
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!isWinner) {
-    return <TryAgainScreen onTryAgain={onBackToHome} />;
+    return (
+      <TryAgainScreen
+        onTryAgain={onBackToHome}
+        errorMessage={result.errorMessage}
+      />
+    );
   }
 
   return <WinnerScreen result={result} onBackToHome={onBackToHome} />;
@@ -139,31 +167,20 @@ function QRCodeModal({ isOpen, onClose, qrDataUrl }: QRCodeModalProps) {
 
         <div className="space-y-4">
           <p className="text-gray-600 text-center text-sm sm:text-base">
-            Scan this QR code to leave a Google review
+            Scan this QR code and leave a google review
           </p>
 
           <div className="flex justify-center bg-gray-100 rounded-xl p-4 sm:p-6">
             {qrDataUrl && (
               <Image
-                height={256}
-                width={256}
                 src={qrDataUrl}
-                alt="Google Review QR Code"
-                className="w-56 h-56 sm:w-64 sm:h-64"
+                alt="Prize QR Code"
+                width={224}
+                height={224}
+                className="w-48 h-48 sm:w-56 sm:h-56"
               />
             )}
           </div>
-
-          <p className="text-gray-500 text-xs sm:text-sm text-center">
-            Point your phone camera at the code above
-          </p>
-
-          <button
-            onClick={onClose}
-            className="w-full bg-[#f97316] hover:bg-[#ea580c] text-white font-bold py-3 px-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>
@@ -171,70 +188,15 @@ function QRCodeModal({ isOpen, onClose, qrDataUrl }: QRCodeModalProps) {
 }
 
 function WinnerScreen({ result }: WinnerScreenProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  // const qrReviewCanvasRef = useRef<HTMLCanvasElement>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
   const [qrReviewDataUrl, setQrReviewDataUrl] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const generateQRCode = async () => {
-      if (!canvasRef.current) return;
-
-      try {
-        const qrData = `
-          🎉 CONGRATULATIONS! 🎉
-
-          Prize: ${result.prize.rewardName}
-          Description: ${result.prize.description}
-
-          ${
-            result.prize.couponCode
-              ? `Coupon Code: ${result.prize.couponCode}`
-              : ""
-          }
-          ${
-            result.prize.couponCode
-              ? `Prize Code: ${result.prize.couponCode}`
-              : `Prize Code: PRIZE-${Date.now()}`
-          }
-
-          Valid Until: ${new Date(
-            Date.now() + 30 * 24 * 60 * 60 * 1000
-          ).toLocaleDateString()}
-
-          To redeem:
-          1. Show this QR code at checkout
-          2. Or use the codes above online
-          3. Visit: https://robibianco-website.vercel.app/
-
-          Thank you for spinning with us!
-        `.trim();
-
-        await QRCode.toCanvas(canvasRef.current, qrData, {
-          width: 200,
-          margin: 2,
-          color: {
-            dark: "#000000",
-            light: "#FFFFFF",
-          },
-        });
-
-        const dataUrl = await QRCode.toDataURL(qrData, {
-          width: 400,
-          margin: 2,
-          color: {
-            dark: "#000000",
-            light: "#FFFFFF",
-          },
-        });
-        setQrDataUrl(dataUrl);
-      } catch (error) {
-        console.error("Error generating QR code:", error);
-      }
-    };
-
-    generateQRCode();
+    // Use the provided QR code from the API response
+    if (result.qrCode) {
+      setQrDataUrl(result.qrCode);
+    }
   }, [result]);
 
   useEffect(() => {
@@ -323,6 +285,12 @@ function WinnerScreen({ result }: WinnerScreenProps) {
           🎉 Congratulations! 🎉
         </h1>
 
+        {result.errorMessage && (
+          <div className="max-w-2xl mx-auto mb-4 px-4 py-3 bg-red-100 border border-red-300 text-red-800 rounded-lg">
+            {result.errorMessage}
+          </div>
+        )}
+
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 sm:mb-12 lg:mb-16 text-[#f97316] text-balance px-4 font-body [-webkit-text-stroke:1px_black]">
           You Win: {result.prize.rewardName}
         </h2>
@@ -330,12 +298,22 @@ function WinnerScreen({ result }: WinnerScreenProps) {
         <div className="max-w-xs sm:max-w-md lg:max-w-lg mx-auto bg-[#cdda55] text-black rounded-2xl p-4 sm:p-6 lg:p-8 mb-8 sm:mb-12 lg:mb-16 shadow-2xl">
           {/* QR Code */}
           <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto mb-4 sm:mb-6 bg-white rounded-lg flex items-center justify-center p-2 sm:p-4">
-            <canvas ref={canvasRef} className="max-w-full max-h-full" />
+            {qrDataUrl ? (
+              <Image
+                src={qrDataUrl}
+                alt="Prize QR Code"
+                width={224}
+                height={224}
+                className="max-w-full max-h-full"
+              />
+            ) : (
+              <div className="animate-pulse bg-gray-200 w-full h-full rounded" />
+            )}
           </div>
 
           <div className="space-y-2 sm:space-y-3 font-body">
             <p className="font-bold text-sm sm:text-lg lg:text-xl">
-              Prize Code: {result.prize.couponCode || `PRIZE-${Date.now()}`}
+              Prize: {result.prize.couponCode || `PRIZE-${Date.now()}`}
             </p>
             <p className="text-xs sm:text-sm lg:text-base leading-relaxed">
               {result.prize.description}
@@ -396,9 +374,10 @@ function WinnerScreen({ result }: WinnerScreenProps) {
 
 interface TryAgainScreenProps {
   onTryAgain: () => void;
+  errorMessage?: string;
 }
 
-function TryAgainScreen({ onTryAgain }: TryAgainScreenProps) {
+function TryAgainScreen({ onTryAgain, errorMessage }: TryAgainScreenProps) {
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
       <div className="bg-[#48a256] text-white text-center py-6 sm:py-8 lg:py-12 relative">
@@ -442,6 +421,13 @@ function TryAgainScreen({ onTryAgain }: TryAgainScreenProps) {
           <h2 className="text-xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-4 sm:mb-6 lg:mb-8 text-balance">
             Try Again!
           </h2>
+
+          {/* If the server provided an error message (e.g. monthly limit), show it here */}
+          {errorMessage ? (
+            <p className="text-sm sm:text-base text-red-600 mb-4 px-4">
+              {errorMessage}
+            </p>
+          ) : null}
 
           <p className="text-sm sm:text-lg lg:text-xl text-gray-600 mb-8 sm:mb-12 lg:mb-16 leading-relaxed text-pretty">
             Better luck next time! Thank you for your review. Come back again

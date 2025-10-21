@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useRef, useMemo } from "react";
-import { useRewards } from "@/hooks/use-api";
+import { useRewards, useSpinResult } from "@/hooks/use-api";
 
 import type { WheelSegment, SpinResult } from "@/types";
 
@@ -21,7 +21,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
     error: rewardsError,
   } = useRewards();
 
-  const wheelSegments: WheelSegment[] = useMemo(() => {
+  const filteredData: WheelSegment[] = useMemo(() => {
     if (!rewardsData?.data?.rewards) {
       return [];
     }
@@ -61,6 +61,13 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
       };
     });
   }, [rewardsData]);
+  const wheelSegments = filteredData.filter((item) => item.reward.stock > 0);
+
+  // console.log(filteredData);
+
+  // console.log(wheelSegments);
+
+  const { mutateAsync: submitSpinResult } = useSpinResult();
 
   const handleSpin = () => {
     if (hasSpun || wheelSegments.length === 0) return;
@@ -68,6 +75,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
     const targetIndex = Math.floor(Math.random() * wheelSegments.length);
     const segment = wheelSegments[targetIndex];
 
+    console.log(segment);
     const baseRotation = 1800;
     const segmentAngle = 360 / wheelSegments.length;
     const finalAngle = 360 - (segment.angle + segmentAngle / 2);
@@ -81,11 +89,42 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
       wheelRef.current.classList.add("spin-animation");
     }
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setHasSpun(true);
 
-      setTimeout(() => {
-        // FIX: Include all required fields for the result screen
+      try {
+        const spinResponse = await submitSpinResult({
+          rewardId: segment.reward._id,
+        });
+
+        if (!spinResponse.data) {
+          throw new Error("No data received from spin result");
+        }
+
+        setTimeout(() => {
+          const { spin, qrCode, link } = spinResponse.data;
+          onSpinComplete({
+            prize: {
+              id: segment.reward._id,
+              rewardName: segment.reward.rewardName,
+              couponCode: segment.reward.couponCode,
+              description: segment.reward.description,
+              isTryAgain: segment.reward.isTryAgain,
+              prizeCode: spin?.uniqueCode || "",
+            },
+            spinDetails: spin,
+            qrCode: qrCode,
+            redeemLink: link,
+          });
+        }, 1000);
+      } catch (error: any) {
+        console.error("Error submitting spin result:", error);
+
+        // Try to extract a server-provided message (common shape: { message: string })
+        const serverMessage =
+          error?.response?.data?.message || error?.message || undefined;
+
+        // Still complete with basic info if API fails, but include any server message
         onSpinComplete({
           prize: {
             id: segment.reward._id,
@@ -93,10 +132,11 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
             couponCode: segment.reward.couponCode,
             description: segment.reward.description,
             isTryAgain: segment.reward.isTryAgain,
-            prizeCode: (segment.reward as any).prizeCode || "",
+            prizeCode: "",
           },
+          errorMessage: serverMessage,
         });
-      }, 1000);
+      }
     }, 3000);
   };
 
@@ -133,7 +173,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
-      <div className="bg-[#48a256] text-white text-center py-8 sm:py-10 lg:py-12 relative">
+      {/* <div className="bg-[#48a256] text-white text-center py-8 sm:py-10 lg:py-12 relative">
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold px-4 mb-2 font-heading">
           Spin & Win
         </h1>
@@ -162,7 +202,7 @@ export default function SpinWheel({ onSpinComplete }: SpinWheelProps) {
             />
           </svg>
         </div>
-      </div>
+      </div> */}
 
       <div className="px-4 py-6 sm:py-8 lg:py-10">
         <div className="max-w-4xl mx-auto text-center flex items-center flex-col justify-center">
