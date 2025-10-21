@@ -14,17 +14,17 @@ interface SlideshowProps {
 const slides = [
   {
     id: 1,
-    image: "/banner1.jpeg",
+    image: "/l1.png",
     title: "Spin the wheel and grab a prize from our bar or kitchen!",
   },
   {
     id: 2,
-    image: "/banner2.jpeg",
+    image: "/l2.png",
     title: "Griez ratu un laimē balvu no mūsu bāra vai virtuves!",
   },
   {
     id: 3,
-    image: "/banner3.jpeg",
+    image: "/l3.png",
     title: "Крути колесо и получай приз из нашего бара или кухни!",
   },
 ];
@@ -75,6 +75,7 @@ export default function Slideshow({ onSlideClick }: SlideshowProps) {
               src={slide.image}
               alt={`Slide ${slide.id}`}
               fill
+              quality={100}
               className="object-cover"
               priority={index === 0}
             />
