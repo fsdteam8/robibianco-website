@@ -11,7 +11,7 @@ export default function SpinIntro({ onStart }: SpinIntroProps) {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url('/banner1.jpeg')`,
+          backgroundImage: `url('/l1.png')`,
         }}
       >
         <div className="absolute inset-0 bg-black/50" />
